@@ -1,5 +1,3 @@
-
-
 # Code Assist+ User Manual
 
 ## Introduction
@@ -26,9 +24,9 @@ Code Assist+ is suitable for a wide range of users:
 ### Prerequisites
 
 Before you begin, ensure you have the following:
-- A Cohere API key (you can sign up for one on the Cohere website).
+- A Codestral API key (you can sign up for one on the Codestral website).
 - Python 3.6 or higher installed on your machine.
-- Required Python libraries: Streamlit, Cohere, and FPDF.
+- Required Python libraries: Streamlit, Codestral, and FPDF.
 
 ### Installation
 
@@ -43,7 +41,7 @@ Before you begin, ensure you have the following:
    pip install -r requirements.txt
    ```
 
-3. **Configure API Key**: Replace `"btu0gWrLzedOkMOrjGC1k6gEhVbIcR0GdsrNlT24"` in the code with your Cohere API key.
+3. **Configure API Key**: Replace `"****************"` in the code with your Codestral API key.
 
 ### Running the Application
 
@@ -151,7 +149,7 @@ public class Main {
 
 ## How Code Assist+ Generates Code
 
-Code Assist+ uses Cohere's advanced language model to generate responses. When you input code or a query, the application sends a prompt to Cohere's API, which processes the input and generates a relevant response based on its training on vast amounts of code and natural language data. The response is then displayed in the application.
+Code Assist+ uses Codestral's advanced language model to generate responses. When you input code or a query, the application sends a prompt to Codestral's API, which processes the input and generates a relevant response based on its training on vast amounts of code and natural language data. The response is then displayed in the application.
 
 ## Conclusion
 
