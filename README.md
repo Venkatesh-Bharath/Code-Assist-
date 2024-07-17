@@ -55,13 +55,90 @@ streamlit run app.py
 ### Navigation
 
 Code Assist+ provides several features accessible via the sidebar:
+- **Code Generation**
+- **Code Conversion**
 - **Code Review Chatbot**
 - **Code Debugger**
 - **Document Generation**
-- **Code Conversion**
 - **About**
 
 Select a tab to access its features.
+### Code Generation
+1. **Navigate to the "Code Generation" tab**.
+2. **Select the target language** (e.g., Java) from the dropdown menu.
+3. **Enter your problem statement** in the text area provided.
+4. **Click "Generate"** to receive the  code.
+
+**Example**:
+
+```markdown
+# Factorial of a Number in Java
+
+## Code
+
+```java
+public class Factorial {
+    public static void main(String[] args) {
+        int num = 5; // Change this value to calculate the factorial of a different number
+        long factorial = 1;
+        int i = 1;
+        
+        while (i <= num) {
+            factorial *= i;
+            i++;
+        }
+        
+        System.out.println("The factorial of " + num + " is " + factorial);
+    }
+}
+```
+
+#### Explanation
+
+- **num**: Stores the number for which we calculate the factorial.
+- **factorial**: Holds the result of the factorial calculation (initialized to 1).
+- **i**: Counter used in the while loop to iterate from 1 up to `num`.
+
+#### Steps:
+1. **Initialization**: Initialize `num` to the desired number, `factorial` to 1, and `i` to 1.
+2. **Calculation**: Multiply `factorial` by `i` in each iteration of the loop.
+3. **Output**: Print the factorial of `num`.
+
+#### Time Complexity
+
+The time complexity of this code is **O(n)**, where `n` is the value of `num`. The while loop runs `n` times.
+
+#### Space Complexity
+
+The space complexity of this code is **O(1)** because it uses a constant amount of extra space regardless of the input size.
+```
+
+This structure provides a clear breakdown of the Java code to calculate the factorial, along with explanations of its components and complexities.
+
+
+
+### Code Conversion
+
+1. **Navigate to the "Code Conversion" tab**.
+2. **Enter your code** in the text area provided.
+3. **Select the target language** (e.g., Java) from the dropdown menu.
+4. **Click "Convert Code"** to receive the converted code.
+
+**Example**:
+```python
+# Python Code
+def add(a, b):
+    return a + b
+```
+
+**Converted to Java**:
+```java
+public class Main {
+    public static int add(int a, int b) {
+        return a + b;
+    }
+}
+```
 
 ### Code Review Chatbot
 
@@ -124,28 +201,7 @@ A PDF containing:
 - Alternative Implementations: Other ways to write the greeting function.
 - Conclusion.
 
-### Code Conversion
 
-1. **Navigate to the "Code Conversion" tab**.
-2. **Enter your code** in the text area provided.
-3. **Select the target language** (e.g., Java) from the dropdown menu.
-4. **Click "Convert Code"** to receive the converted code.
-
-**Example**:
-```python
-# Python Code
-def add(a, b):
-    return a + b
-```
-
-**Converted to Java**:
-```java
-public class Main {
-    public static int add(int a, int b) {
-        return a + b;
-    }
-}
-```
 
 ## How Code Assist+ Generates Code
 
