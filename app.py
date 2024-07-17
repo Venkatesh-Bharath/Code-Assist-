@@ -1,12 +1,11 @@
 import cohere
 import streamlit as st
-import html
 from fpdf import FPDF
 from langchain_mistralai import ChatMistralAI
 
 # Your Cohere API key (ensure this is kept secret in actual deployments)
-# cohere_api_key = "**"
-MISTRAL_API_KEY="***"
+cohere_api_key = "***"
+MISTRAL_API_KEY = "***"
 mistral_model = "codestral-latest"
 
 # Initialize conversation history in session state
@@ -17,20 +16,14 @@ def append_message(role, content):
     """Appends a message to the conversation history."""
     st.session_state["messages"].append({"role": role, "content": content})
 
-def display_conversation():
-    """Displays the conversation history."""
-    for message in st.session_state["messages"]:
-        if message['role'] == 'user':
-            st.write(f"**You**: {message['content']}")
+def display_last_response():
+    """Displays only the last message in the conversation history."""
+    if st.session_state["messages"]:
+        last_message = st.session_state["messages"][-1]
+        if last_message['role'] == 'user':
+            st.write(f"**You**: {last_message['content']}")
         else:
-            st.write(f"**Chatbot**: {message['content']}")
-
-
-programming_languages = [
-        None, "Python", "Java", "C++", "JavaScript", "C#", "PHP", "Ruby", "Swift",
-        "Kotlin", "Go", "Rust", "Dart", "TypeScript", "Perl", "R", "Scala", "Julia",
-        "MATLAB", "SQL", "Assembly", "HTML", "CSS"
-    ]
+            st.write(f"**Chatbot**: {last_message['content']}")
 
 def code_generation_tab():
     st.title("Code Generation")
@@ -57,39 +50,32 @@ def code_generation_tab():
             # Display conversation including the loading state
             with st.spinner('Waiting for response...'):
                 try:
-                    # Initialize Cohere client
-                    # co = cohere.Client(cohere_api_key)
                     llm = ChatMistralAI(model=mistral_model, temperature=0, api_key=MISTRAL_API_KEY)
-                    prompt=f"""develop the working code for :\n\nCode:\n{user_input}\n\n in \n{selected_language}
+                    prompt = f"""develop the working code for :\n\nCode:\n{user_input}\n\n in \n{selected_language}
                                 while explaining code also mention feature of code like time complexity etc
                                 """
-                    response=llm.invoke([("user", prompt)])
-                    bot_response =response.content
-                    # Generate response from the chatbot
-                    # response = co.generate(
-                    #     model='command-xlarge-nightly',
-                    #     prompt=f"""develop the working code for :\n\nCode:\n{user_input}\n\n in \n{selected_language}
-                    #             while explaining code also mention feature of code like time complexity etc
-                    #             """,
-                    #     max_tokens=1000  # Adjust max tokens for a longer response
-                    # )
+                    response = llm.invoke([("user", prompt)])
+                    bot_response = response.content
 
-                    # Extract chatbot response
-                    # bot_response = response.generations[0].text.strip()
-                    
-                    # print(bot_response)
                     append_message("bot", bot_response)
                     st.code(bot_response, language=selected_language.lower())
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
 
-            # Display conversation history
-            display_conversation()
+            # Display the last response
+            display_last_response()
         else:
             st.warning("Please select a programming language and enter your question before clicking 'Generate'.")
 
 def code_conversion_tab():
     st.title("Code Conversion")
+
+    # Dropdown options for programming languages
+    programming_languages = [
+        None, "Python", "Java", "C++", "JavaScript", "C#", "PHP", "Ruby", "Swift",
+        "Kotlin", "Go", "Rust", "Dart", "TypeScript", "Perl", "R", "Scala", "Julia",
+        "MATLAB", "SQL", "Assembly", "HTML", "CSS"
+    ]
 
     # User input field for code
     user_code_input = st.text_area("Enter your code here:")
@@ -105,25 +91,17 @@ def code_conversion_tab():
             with st.spinner('Converting code...'):
                 try:
                     llm = ChatMistralAI(model=mistral_model, temperature=0, api_key=MISTRAL_API_KEY)
-                    prompt=f"Convert the following code to {language}:\n\n{user_code_input}"
-                    response=llm.invoke([("user", prompt)])
-                    converted_code =response.content
+                    prompt = f"Convert the following code to {language}:\n\n{user_code_input}"
+                    response = llm.invoke([("user", prompt)])
+                    converted_code = response.content
 
-                    # co = cohere.Client(cohere_api_key)
-
-                    # # Generate response from the chatbot
-                    # response = co.generate(
-                    #     model='command-xlarge-nightly',
-                    #     prompt=f"Convert the following code to {language}:\n\n{user_code_input}",
-                    #     max_tokens=1000  # Adjust max tokens for a longer response
-                    # )
-
-                    # # Extract chatbot response
-                    # converted_code = response.generations[0].text.strip()
                     append_message("bot", converted_code)
                     st.code(converted_code, language='java')
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
+
+            # Display the last response
+            display_last_response()
 
 def code_reviewer_tab():
     st.title("Code Review Chatbot")
@@ -141,28 +119,17 @@ def code_reviewer_tab():
             with st.spinner('Waiting for response...'):
                 try:
                     llm = ChatMistralAI(model=mistral_model, temperature=0, api_key=MISTRAL_API_KEY)
-                    prompt=f"Review the following code and provide feedback:\n\n{user_code_input}"
-                    response=llm.invoke([("user", prompt)])
-                    bot_response =response.content
+                    prompt = f"Review the following code and provide feedback:\n\n{user_code_input}"
+                    response = llm.invoke([("user", prompt)])
+                    bot_response = response.content
 
-                    # Initialize Cohere client
-                    # co = cohere.Client(cohere_api_key)
-                    # # Generate response from the chatbot
-                    # response = co.generate(
-                    #     model='command-xlarge-nightly',
-                    #     prompt=f"Review the following code and provide feedback:\n\n{user_code_input}",
-                    #     max_tokens=1000  # Increased max tokens for a longer response
-                    # )
-
-                    # # Extract chatbot response
-                    # bot_response = response.generations[0].text.strip()
                     append_message("bot", bot_response)
                 except Exception as e:
                     bot_response = f"An error occurred: {e}"
                     append_message("bot", bot_response)
-        
-        # Display conversation history
-        display_conversation()
+
+        # Display the last response
+        display_last_response()
 
 def code_debugger_tab():
     st.title("Code Debugger")
@@ -181,33 +148,21 @@ def code_debugger_tab():
             with st.spinner('Waiting for response...'):
                 try:
                     llm = ChatMistralAI(model=mistral_model, temperature=0, api_key=MISTRAL_API_KEY)
-                    prompt=f"Debug the following code and fix the error:\n\nCode:\n{user_code_input}\n\nError:\n{user_error_input}"
-                    response=llm.invoke([("user", prompt)])
-                    bot_response =response.content
-
-                    # # Initialize Cohere client
-                    # co = cohere.Client(cohere_api_key)
-
-                    # # Generate response from the chatbot
-                    # response = co.generate(
-                    #     model='command-xlarge-nightly',
-                    #     prompt=f"Debug the following code and fix the error:\n\nCode:\n{user_code_input}\n\nError:\n{user_error_input}",
-                    #     max_tokens=1000  # Adjust max tokens for a longer response
-                    # )
-                    # # Extract chatbot response
-                    # bot_response = response.generations[0].text.strip()
+                    prompt = f"Debug the following code and fix the error:\n\nCode:\n{user_code_input}\n\nError:\n{user_error_input}"
+                    response = llm.invoke([("user", prompt)])
+                    bot_response = response.content
 
                     append_message("bot", bot_response)
                 except Exception as e:
                     bot_response = f"An error occurred: {e}"
                     append_message("bot", bot_response)
-        
-        # Display conversation history
-        display_conversation()
+
+        # Display the last response
+        display_last_response()
 
 def generate_document(code):
     llm = ChatMistralAI(model=mistral_model, temperature=0, api_key=MISTRAL_API_KEY)
-    prompt=f"""
+    prompt = f"""
         Create a detailed PDF document about the following code:
         \n\nCode:\n{code}\n\n
         The document should include:
@@ -219,28 +174,9 @@ def generate_document(code):
         6. Other ways to write the given code.
         7. A conclusion.
         """
-    response=llm.invoke([("user", prompt)])
-    document_content =response.content
+    response = llm.invoke([("user", prompt)])
+    document_content = response.content
     
-    # co = cohere.Client(cohere_api_key)
-    # response = co.generate(
-    #     model='command-xlarge-nightly',
-    #     prompt=f"""
-    #     Create a detailed PDF document about the following code:
-    #     \n\nCode:\n{code}\n\n
-    #     The document should include:
-    #     1. A generated heading based on the code.
-    #     2. A list of contents.
-    #     3. An about section with a short paragraph about the code and its use.
-    #     4. The provided code.
-    #     5. A line-by-line explanation of the code.
-    #     6. Other ways to write the given code.
-    #     7. A conclusion.
-    #     """,
-    #     max_tokens=1000
-    # )
-    
-    # document_content = response.generations[0].text.strip()
     return document_content
 
 def save_pdf(content, file_name="Code_Document.pdf"):
@@ -275,42 +211,61 @@ def document_generation_tab():
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
 
-# Define the sidebar navigation
-st.sidebar.markdown("<h1 style='font-size: 32px;'>Code Assist+</h1>", unsafe_allow_html=True)
-st.sidebar.title("Navigation")
-app_mode = st.sidebar.selectbox("Choose the app mode", ["Code Generation", "Code Conversion", "Code Review Chatbot", "Code Debugger", "Document Generation", "About"])
-
-if app_mode == "Code Generation":
-    code_generation_tab()
-
-elif app_mode == "Code Conversion":
-    code_conversion_tab()
-
-elif app_mode == "Code Review Chatbot":
-    code_reviewer_tab()
-
-elif app_mode == "Code Debugger":
-    code_debugger_tab()
-
-elif app_mode == "Document Generation":
-    document_generation_tab()
-
-elif app_mode == "About":
-    st.title("About Code Assist+")
+def css_code_execution():
     st.markdown("""
-    **Code Assist+** is a powerful tool designed to help developers with their coding needs. Whether you are looking for code generation, code conversion, code reviews, debugging assistance, or creating detailed documentation, Code Assist+ has you covered.
+    <style>
+        .question-container {
+            border-radius: 10px; /* Round corners */
+            overflow-y: auto; /* Enable scrolling for content within */
+        }
+        .human {
+            background-color: #e0e0e0; /* Light grey background for question */
+            padding: 5px; /* Add some padding for better separation */
+            border-radius: 5px; /* Round corners for the question paragraph */
+            font-weight: bold; /* Bold text for question */
+        }
+        .st-emotion-cache-18ni7ap.ezrtsby2 {
+            visibility:hidden;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
-    ### Features
-    - **Code Generation**: Generate working code snippets in various programming languages.
-    - **Code Conversion**: Convert code from one programming language to another.
-    - **Code Review Chatbot**: Get feedback and suggestions on your code snippets.
-    - **Code Debugger**: Find and fix errors in your code quickly and efficiently.
-    - **Document Generation**: Create detailed PDF documents about your code, including explanations and alternative implementations.
+# Define the sidebar navigation
+def main():
+    css_code_execution()
+    st.sidebar.markdown("<h1 style='font-size: 32px;'>Code Assist+</h1>", unsafe_allow_html=True)
+    st.sidebar.title("Navigation")
+    app_mode = st.sidebar.selectbox("Choose the app mode", ["Code Generation", "Code Conversion", "Code Review Chatbot", "Code Debugger", "Document Generation", "About"])
 
-    ### How to Use
-    1. Navigate to the desired tab using the sidebar.
-    2. Enter your code or query in the input fields provided.
-    3. Click the relevant button to get feedback, assistance, or generate documents.
+    if app_mode == "Code Generation":
+        code_generation_tab()
+    elif app_mode == "Code Conversion":
+        code_conversion_tab()
+    elif app_mode == "Code Review Chatbot":
+        code_reviewer_tab()
+    elif app_mode == "Code Debugger":
+        code_debugger_tab()
+    elif app_mode == "Document Generation":
+        document_generation_tab()
+    elif app_mode == "About":
+        st.title("About Code Assist+")
+        st.markdown("""
+        **Code Assist+** is a powerful tool designed to help developers with their coding needs. Whether you are looking for code generation, code conversion, code reviews, debugging assistance, or creating detailed documentation, Code Assist+ has you covered.
 
-    We hope Code Assist+ becomes an essential part of your development workflow. Happy coding!
-    """)
+        ### Features
+        - **Code Generation**: Generate working code snippets in various programming languages.
+        - **Code Conversion**: Convert code from one programming language to another.
+        - **Code Review Chatbot**: Get feedback and suggestions on your code snippets.
+        - **Code Debugger**: Find and fix errors in your code quickly and efficiently.
+        - **Document Generation**: Create detailed PDF documents about your code, including explanations and alternative implementations.
+
+        ### How to Use
+        1. Navigate to the desired tab using the sidebar.
+        2. Enter your code or query in the input fields provided.
+        3. Click the relevant button to get feedback, assistance, or generate documents.
+
+        We hope Code Assist+ becomes an essential part of your development workflow. Happy coding!
+        """)
+
+if __name__ == "__main__":
+    main()
