@@ -103,7 +103,7 @@ def divide(a, b):
     if b == 0:
         return 'Cannot divide by zero'
     return a / b
-```"
+```
 
 ### Document Generation
 
@@ -117,7 +117,7 @@ def greet(name):
     return f"Hello, {name}!"
 ```
 
-### Generated Document:
+**Generated Document**:
 A PDF containing:
 - Heading: Greeting Function
 - About: This function greets the user by name.
