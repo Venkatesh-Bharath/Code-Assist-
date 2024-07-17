@@ -125,20 +125,41 @@ This structure provides a clear breakdown of the Java code to calculate the fact
 4. **Click "Convert Code"** to receive the converted code.
 
 **Example**:
-```python
-# Python Code
-def add(a, b):
-    return a + b
-```
-
-**Converted to Java**:
 ```java
-public class Main {
-    public static int add(int a, int b) {
-        return a + b;
+public class Factorial {
+    public static void main(String[] args) {
+        int num = 5; // Change this value to calculate the factorial of a different number
+        long factorial = 1;
+        int i = 1;
+ 
+        while(i <= num) {
+            factorial *= i;
+            i++;
+        }
+ 
+        System.out.println("The factorial of " + num + " is " + factorial);
+ 
+
     }
 }
 ```
+
+**Converted to Java**:
+Here is the equivalent Python code:
+ 
+```python
+num = 5  # Change this value to calculate the factorial of a different number
+factorial = 1
+i = 1
+ 
+while i <= num:
+    factorial *= i
+    i += 1
+ 
+print("The factorial of", num, "is", factorial)
+```
+This Python script does the same thing as the Java code: it calculates the factorial of a number. The factorial of a number is the product of all positive integers less than or equal to that number.
+
 
 ### Code Review Chatbot
 
@@ -147,13 +168,50 @@ public class Main {
 3. **Click "Send"** to receive feedback and suggestions.
 
 **Example**:
-```python
-def add(a, b):
-    return a + b
+```java
+public class Factorial {
+    public static void main(String[] args) {
+        int num = 5; // Change this value to calculate the factorial of a different number
+        long factorial = 1;
+        int i = 1;
+ 
+        while(i <= num) {
+            factorial *= i;
+            i++;
+        }
+ 
+        System.out.println("The factorial of " + num + " is " + factorial);
+    }
+}
 ```
 
 **Response**:
-"The code is simple and effective. Consider adding type hints for better readability."
+
+The code you've provided is a simple Java program that calculates the factorial of a given number. The factorial of a number is the product of all positive integers less than or equal to that number.
+
+**Review:**
+
+- The code is well-structured and adheres to standard Java conventions for class and method definitions.
+- The variable `num` is used to store the number for which the factorial is calculated. It's initialized with the value 5, allowing for easy modification to compute the factorial of different numbers.
+- `factorial` is initialized to 1, correctly reflecting that the factorial of 0 and 1 is 1.
+- The variable `i` serves as a counter in the `while` loop, starting from 1 and incrementing by 1 in each iteration.
+- The `while` loop efficiently computes the factorial by multiplying `factorial` with `i` and incrementing `i` until it surpasses `num`.
+- The result is displayed using `System.out.println()`.
+
+**Suggestions for Improvement:**
+
+- Consider adding input validation to ensure `num` is a non-negative integer, handling negative numbers or non-integer inputs.
+- Adding comments would enhance code readability and facilitate understanding for other developers.
+- You might streamline the code slightly by using a `for` loop instead of a `while` loop:
+
+```java
+for (int i = 1; i <= num; i++) {
+    factorial *= i;
+}
+```
+
+- To handle potential overflow errors where the factorial of `num` exceeds the maximum value a `long` variable can hold (9,223,372,036,854,775,807), consider checking if `factorial` exceeds this limit and providing an appropriate error message if it does.
+
 
 ### Code Debugger
 
