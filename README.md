@@ -115,7 +115,7 @@ The space complexity of this code is **O(1)** because it uses a constant amount 
 
 This structure provides a clear breakdown of the Java code to calculate the factorial, along with explanations of its components and complexities.
 
-
+```
 
 ### Code Conversion
 
